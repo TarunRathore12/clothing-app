@@ -22,12 +22,12 @@ import {
 } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyARuhD-Jp35gAVEb5uphCYC_oCvpOkY3rs",
-  authDomain: "crown-clothing-f2bf0.firebaseapp.com",
-  projectId: "crown-clothing-f2bf0",
-  storageBucket: "crown-clothing-f2bf0.appspot.com",
-  messagingSenderId: "475471983860",
-  appId: "1:475471983860:web:56ac98f24894282e839aa1",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
@@ -81,7 +81,6 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
 
 export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
-
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
@@ -102,16 +101,16 @@ export const getCategoriesAndDocuments = async () => {
   const q = query(collectionRef);
 
   const querySnapShot = await getDocs(q);
-  const categoriesMap = querySnapShot.docs.reduce(
-    (previosData, docSnapShot) => {
-      const { title, items } = docSnapShot.data();
-      previosData[title.toLowerCase()] = items;
-      return previosData;
-    },
-    {}
-  );
-
-  return categoriesMap;
+  const categoriesArray = querySnapShot.docs.map(docSnapshot => docSnapshot.data());
+  // const categoriesMap = querySnapShot.docs.reduce(
+  //   (previosData, docSnapShot) => {
+  //     const { title, items } = docSnapShot.data();
+  //     previosData[title.toLowerCase()] = items;
+  //     return previosData;
+  //   },
+  //   {}
+  // );
+  return categoriesArray;
 };
 
 export const signOutUser = async () => {
